@@ -6,7 +6,7 @@ import java.util.Map;
 // 146
 class LRUCache {
 
-  class DuLinkedNode {
+  static class DuLinkedNode {
 
     int key, value;
     DuLinkedNode prev, next;
@@ -20,10 +20,11 @@ class LRUCache {
     }
   }
 
-  private Map<Integer, DuLinkedNode> cache = new HashMap<Integer, DuLinkedNode>();
+  private final Map<Integer, DuLinkedNode> cache = new HashMap<>();
   private int size;
-  private int capacity;
-  private DuLinkedNode head, tail;
+  private final int capacity;
+  private final DuLinkedNode head;
+  private final DuLinkedNode tail;
 
   public LRUCache(int capacity) {
     this.size = 0;

@@ -7,8 +7,9 @@ class ListSolution {
       return null;
     }
     ListNode pA = headA, pB = headB;
+    // ListA.last.next = ListB.head
+    // ListB.last.next = ListA.head
     while (pA != pB) {
-      //for the end of first iteration, we just reset the pointer to the head of another linkedlist
       if (pA == null) {
         pA = headB;
       } else {

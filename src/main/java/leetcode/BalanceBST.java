@@ -3,7 +3,9 @@ package leetcode;
 import java.util.ArrayList;
 import java.util.List;
 
-// 给一棵二叉搜索树，返回一棵 平衡后 的二叉搜索树，新生成的树应该与原来的树有着相同的节点值。
+/**
+ * 给一棵二叉搜索树 返回一棵 "平衡" 后的二叉搜索树 新生成的树应与原来的树有相同的节点值
+ */
 class BalanceBST {
 
   List<Integer> inorderArray = new ArrayList<>();
@@ -35,4 +37,3 @@ class BalanceBST {
     return o;
   }
 }
-

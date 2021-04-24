@@ -4,8 +4,8 @@ import java.util.LinkedList;
 
 class StackOfPlates {
 
-  private LinkedList<LinkedList<Integer>> stacks;
-  private int capacity;
+  private final LinkedList<LinkedList<Integer>> stacks;
+  private final int capacity;
 
   public StackOfPlates(int cap) {
     this.stacks = new LinkedList<>();

@@ -9,6 +9,74 @@ import java.util.Stack;
 
 class TreeSolution {
 
+  // 109
+  public TreeNode sortedListToBST(ListNode head) {
+    return buildTree(head, null);
+  }
+
+  public TreeNode buildTree(ListNode left, ListNode right) {
+    if (left == right) {
+      return null;
+    }
+    ListNode mid = getMedian(left, right);
+    TreeNode root = new TreeNode(mid.val);
+    root.left = buildTree(left, mid);
+    root.right = buildTree(mid.next, right);
+    return root;
+  }
+
+  public ListNode getMedian(ListNode left, ListNode right) {
+    // 快慢指针
+    ListNode fast = left;
+    ListNode slow = left;
+    // fast 与 right 比较
+    while (fast != right && fast.next != right) {
+      fast = fast.next;
+      fast = fast.next;
+      slow = slow.next;
+    }
+    return slow;
+  }
+
+  // 103
+  public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    List<List<Integer>> res = new LinkedList<>();
+    if (root == null) {
+      return res;
+    }
+    Queue<TreeNode> nodeQueue = new LinkedList<>();
+    nodeQueue.offer(root);
+    int curCount = 1, nextCount = 0;
+    boolean toRight = true;
+    while (!nodeQueue.isEmpty() && curCount > 0) {
+      var levelRes = new LinkedList<Integer>();
+      while (curCount > 0) {
+        var curNode = nodeQueue.poll();
+        assert curNode != null;
+        if (toRight) {
+          levelRes.offerLast(curNode.val);
+        } else {
+          levelRes.offerFirst(curNode.val);
+        }
+        if (curNode.left != null) {
+          nodeQueue.add(curNode.left);
+          nextCount++;
+        }
+        if (curNode.right != null) {
+          nodeQueue.add(curNode.right);
+          nextCount++;
+        }
+        curCount--;
+      }
+      res.add(levelRes);
+      curCount = nextCount;
+      nextCount = 0;
+      toRight = !toRight;
+    }
+
+    return res;
+  }
+
   // 114 二叉树展开为链表
   public void flattenNonRecurse(TreeNode root) {
     // 先序遍历
@@ -224,6 +292,17 @@ class TreeSolution {
     return minimumDepth + 1;
   }
 
+  // 404
+  public int sumOfLeftLeaves(TreeNode root) {
+    if (root == null) {
+      return 0;
+    }
+    if (root.left != null && root.left.left == null && root.left.right == null) {
+      return root.left.val + sumOfLeftLeaves(root.right);
+    }
+    return sumOfLeftLeaves(root.left) + sumOfLeftLeaves(root.right);
+  }
+
   // 108
   public TreeNode sortedArrayToBST(int[] nums) {
     return arrayToBSTHelper(nums, 0, nums.length - 1);
@@ -298,6 +377,7 @@ class TreeSolution {
         hasPathSum(root.right, targetSum - root.val);
   }
 
+  // 101
   public boolean isSymmetric(TreeNode root) {
     return isMirror(root, root);
   }
@@ -321,7 +401,7 @@ class TreeSolution {
     }
     var p = root;
     // 中序遍历
-    Stack<TreeNode> stack = new Stack<TreeNode>();
+    Stack<TreeNode> stack = new Stack<>();
     var nums = new LinkedList<Integer>();
     while (!stack.empty() || p != null) {
       while (p != null) {

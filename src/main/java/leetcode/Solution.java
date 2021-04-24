@@ -2,7 +2,6 @@ package leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,136 +12,6 @@ import java.util.Set;
 import java.util.Stack;
 
 class Solution {
-
-  // 27
-  public int removeElement(int[] nums, int val) {
-    int l = 0, r = nums.length;
-    while (l < r) {
-      if (nums[l] == val) {
-        nums[l] = nums[r - 1];
-        r--;
-      } else {
-        l++;
-      }
-    }
-    return l;
-  }
-
-
-  // 1576
-  public String modifyString(String s) {
-    var chars = s.toCharArray();
-    int n = chars.length;
-    for (int i = 0; i < chars.length; i++) {
-      if (chars[i] == '?') {
-        char left = i == 0 ? 'S' : chars[i - 1];
-        char right = i == n - 1 ? 'S' : chars[i + 1];
-        char temp = 'a';
-        while (temp == left || temp == right) {
-          temp++;
-        }
-        chars[i] = temp;
-      }
-    }
-    return new String(chars);
-  }
-
-  // 1541
-  public int minInsertions(String s) {
-    int insertions = 0;
-    int leftBracket = 0;
-    int length = s.length();
-    int index = 0;
-    while (index < length) {
-      char c = s.charAt(index);
-      if (c == '(') {
-        leftBracket++;
-        index++;
-      } else {  // ")"
-        if (leftBracket > 0) {
-          leftBracket--;
-        } else {
-          insertions++;
-        }
-        if (index < length - 1 && s.charAt(index + 1) == ')') {
-          index += 2;
-        } else {
-          insertions++;
-          index++;
-        }
-      }
-    }
-    insertions += leftBracket * 2;
-    return insertions;
-  }
-
-  // 264
-  public int nthUglyNumber(int n) {
-    int[] dp = new int[n + 1];
-    dp[1] = 1;
-    int p2 = 1, p3 = 1, p5 = 1;
-    for (int i = 2; i <= n; i++) {
-      int num2 = dp[p2] * 2, num3 = dp[p3] * 3, num5 = dp[p5] * 5;
-      dp[i] = Math.min(Math.min(num2, num3), num5);
-      if (dp[i] == num2) {
-        p2++;
-      }
-      if (dp[i] == num3) {
-        p3++;
-      }
-      if (dp[i] == num5) {
-        p5++;
-      }
-    }
-    return dp[n];
-  }
-
-  // 263
-  public boolean isUgly(int num) {
-
-    if (num <= 0) {
-      return false;
-    }
-    int[] primes = {2, 3, 5};
-    for (int prime : primes) {
-      while (num % prime == 0) {
-        num /= prime;
-      }
-    }
-    return num == 1;
-
-  }
-
-  // 121
-  public int maxProfit(int[] prices) {
-    int minPrice = Integer.MAX_VALUE;
-    int maxProfit = 0;
-    for (int price : prices) {
-      if (price < minPrice) {
-        minPrice = price;
-      } else if (price - minPrice > maxProfit) {
-        maxProfit = price - minPrice;
-      }
-    }
-    return maxProfit;
-  }
-
-  // 154
-  // [3.3.1.3]
-  public int findMinHard(int[] nums) {
-    int l = 0, r = nums.length - 1;
-    while (l < r) {
-      int m = l + (r - l) / 2;
-      if (nums[m] < nums[r]) {
-        r = m;
-      } else if (nums[m] == nums[r]) {
-        r = r - 1;
-      } else {
-        l = m + 1;
-      }
-    }
-    return nums[l];
-  }
 
   // 223
   public int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
@@ -167,7 +36,6 @@ class Solution {
   boolean isPowerOfThree(int n) {
     return n > 0 && (1162261467 % n == 0);
   }
-
 
   // 153
   public int findMin(int[] nums) {
@@ -313,7 +181,7 @@ class Solution {
 
   // 781
   public int numRabbits(int[] answers) {
-    Map<Integer, Integer> count = new HashMap<Integer, Integer>();
+    Map<Integer, Integer> count = new HashMap<>();
     for (int y : answers) {
       count.put(y, count.getOrDefault(y, 0) + 1);
     }
@@ -731,14 +599,6 @@ class Solution {
     return f[n - 1];
   }
 
-  // 62 数学题
-  public int uniquePaths(int m, int n) {
-    long ans = 1;
-    for (int x = n, y = 1; y < m; ++x, ++y) {
-      ans = ans * x / y;
-    }
-    return (int) ans;
-  }
 
   // 7 整数反转
   public int reverse(int x) {
@@ -804,56 +664,6 @@ class Solution {
       count += 1;
     }
     return count;
-  }
-
-  // 73 矩阵置零
-  public void setZeroes(int[][] matrix) {
-    if (matrix.length == 0 || matrix[0].length == 0) {
-      return;
-    }
-    boolean isFirstRowExistZero = false, isFirstColExistZero = false;
-    for (int[] integers : matrix) {
-      if (integers[0] == 0) {
-        isFirstColExistZero = true;
-        break;
-      }
-    }
-    for (int j = 0; j < matrix[0].length; j++) {
-      if (matrix[0][j] == 0) {
-        isFirstRowExistZero = true;
-        break;
-      }
-    }
-    for (int i = 1; i < matrix.length; i++) {
-      for (int j = 1; j < matrix[0].length; j++) {
-        if (matrix[i][j] == 0) {
-          matrix[i][0] = 0;
-          matrix[0][j] = 0;
-        }
-      }
-    }
-    for (int i = 1; i < matrix.length; i++) {
-      if (matrix[i][0] == 0) {
-        for (int j = 1; j < matrix[0].length; j++) {
-          matrix[i][j] = 0;
-        }
-      }
-    }
-    for (int j = 1; j < matrix[0].length; j++) {
-      if (matrix[0][j] == 0) {
-        for (int i = 1; i < matrix.length; i++) {
-          matrix[i][j] = 0;
-        }
-      }
-    }
-    if (isFirstRowExistZero) {
-      Arrays.fill(matrix[0], 0);
-    }
-    if (isFirstColExistZero) {
-      for (int i = 0; i < matrix.length; i++) {
-        matrix[i][0] = 0;
-      }
-    }
   }
 
   // 69 求平方根
@@ -926,64 +736,40 @@ class Solution {
     return ans;
   }
 
-  // 28
+  /**
+   * @param haystack source
+   * @param needle   target
+   * @return 在 haystack 字符串中找出 needle 字符串出现的第一个位置（下标从 0 开始），不存在则返回 -1
+   */
   public int strStr(String haystack, String needle) {
     int lenH = haystack.length(), lenN = needle.length();
     if (lenN == 0) {
       return 0;
     }
+    // 双指针
     int cursorH = 0;
     while (cursorH < lenH - lenN + 1) {
+      // 向右移动到 匹配 needle 的第一个字符
       while (cursorH < lenH - lenN + 1 && haystack.charAt(cursorH) != needle.charAt(0)) {
         cursorH++;
       }
       int curMatch = 0, cursorN = 0;
+      // 向右 匹配
       while (cursorN < lenN && cursorH < lenH && haystack.charAt(cursorH) == needle
           .charAt(cursorN)) {
         cursorH++;
         cursorN++;
         curMatch++;
       }
+      // 全部匹配
       if (curMatch == lenN) {
         return cursorH - lenN;
       }
+      // 回退
       cursorH = cursorH - curMatch + 1;
     }
     return -1;
 
-  }
-
-  // 220
-  public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
-    int n = nums.length;
-    Map<Long, Long> map = new HashMap<>();
-    long w = (long) t + 1; // 桶的大小
-    for (int i = 0; i < n; i++) {
-      long id = getID(nums[i], w);
-      // 同一个桶
-      if (map.containsKey(id)) {
-        return true;
-      }
-      // 相邻桶
-      if (map.containsKey(id - 1) && Math.abs(nums[i] - map.get(id - 1)) < w) {
-        return true;
-      }
-      if (map.containsKey(id + 1) && Math.abs(nums[i] - map.get(id + 1)) < w) {
-        return true;
-      }
-      map.put(id, (long) nums[i]);
-      if (i >= k) {
-        map.remove(getID(nums[i - k], w));
-      }
-    }
-    return false;
-  }
-
-  public long getID(long x, long w) {
-    if (x >= 0) {
-      return x / w;
-    }
-    return (x + 1) / w - 1;
   }
 
   // 219
@@ -1087,75 +873,6 @@ class Solution {
     return l;
   }
 
-  // 213
-  public int rob2(int[] nums) {
-    int families = nums.length;
-    if (families == 1) {
-      return nums[0];
-    } else if (families == 2) {
-      return Math.max(nums[0], nums[1]);
-    }
-    return Math.max(robRange(nums, 0, families - 2), robRange(nums, 1, families - 1));
-  }
-
-  public int robRange(int[] nums, int start, int end) {
-    int first = nums[start], second = Math.max(nums[start], nums[start + 1]);
-    for (int i = start + 2; i <= end; i++) {
-      int temp = second;
-      second = Math.max(first + nums[i], second);
-      first = temp;
-    }
-    return second;
-  }
-
-  // 198
-  public int rob(int[] nums) {
-    if (nums == null || nums.length == 0) {
-      return 0;
-    }
-    int num = nums.length;
-    if (num == 1) {
-      return nums[0];
-    }
-    int[] dp = new int[num];
-    dp[0] = nums[0];
-    dp[1] = Math.max(nums[0], nums[1]);
-    for (int i = 2; i < num; i++) {
-      dp[i] = Math.max(dp[i - 2] + nums[i], dp[i - 1]);
-    }
-    return dp[num - 1];
-  }
-
-  // 516
-  public int longestPalindromeSubSequence(String s) {
-    int n = s.length();
-    // 状态表示数组，两个维度分别表示区间的左右端点，数值表示区间最大回文长度
-    int[][] f = new int[n][n];
-    int res = 0;
-    // 先枚举区间长度
-    for (int len = 1; len <= n; len++) {
-      // 再枚举区间左右端点
-      for (int i = 0; i + len - 1 < n; i++) {
-        int j = i + len - 1;
-        // 特判长度为1的情况
-        if (len == 1) {
-          f[i][j] = 1;
-        } else {
-          // 不用当前两个端点为回文边界的情况
-          f[i][j] = Math.max(f[i + 1][j], f[i][j - 1]);
-          // 如果两个当前区间的两个端点相同，那就用
-          if (s.charAt(i) == s.charAt(j)) {
-            f[i][j] = f[i + 1][j - 1] + 2;
-          }
-        }
-        // 取最大值
-        res = Math.max(f[i][j], res);
-      }
-    }
-    return res;
-  }
-
-
   // 11
   public int maxArea(int[] height) {
     int l = 0, r = height.length - 1;
@@ -1172,27 +889,4 @@ class Solution {
     return ans;
   }
 
-  // 646
-  public int findLongestChain(int[][] pairs) {
-    Arrays.sort(pairs, Comparator.comparingInt(a -> a[0]));
-    int N = pairs.length;
-    int[] dp = new int[N];
-    Arrays.fill(dp, 1);
-
-    for (int j = 1; j < N; ++j) {
-      for (int i = 0; i < j; ++i) {
-        if (pairs[i][1] < pairs[j][0]) {
-          dp[j] = Math.max(dp[j], dp[i] + 1);
-        }
-      }
-    }
-
-    int ans = 0;
-    for (int x : dp) {
-      if (x > ans) {
-        ans = x;
-      }
-    }
-    return ans;
-  }
 }

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 class MinStack {
 
   Deque<Integer> numStack;
+  // 维护 最小值 栈
   Deque<Integer> minStack;
 
   public MinStack() {

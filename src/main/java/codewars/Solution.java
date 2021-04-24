@@ -20,18 +20,5 @@ public class Solution {
 
     return sorted.collect(Collectors.toList()).get(0);
   }
-
-  // 7 kyu
-  public static boolean isIsogram(String str) {
-    var marks = new boolean[26];
-    for (char c : str.toLowerCase().toCharArray()) {
-      if (marks[c - 97]) {
-        return false;
-      } else {
-        marks[c - 97] = true;
-      }
-    }
-    return true;
-  }
 }
 
