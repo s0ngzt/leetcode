@@ -9,6 +9,122 @@ import java.util.Stack;
 
 class TreeSolution {
 
+  // 450 medium 删除二叉搜索树中的节点
+  public TreeNode deleteNode(TreeNode root, int key) {
+    if (root == null) {
+      return null;
+    }
+
+    // delete from the right subtree
+    if (key > root.val) {
+      root.right = deleteNode(root.right, key);
+    }
+    // delete from the left subtree
+    else if (key < root.val) {
+      root.left = deleteNode(root.left, key);
+    }
+    // delete the current node
+    else {
+      // the node is a leaf
+      if (root.left == null && root.right == null) {
+        root = null;
+      }
+      // the node is not a leaf and has a right child
+      else if (root.right != null) {
+        root.val = successor(root);
+        root.right = deleteNode(root.right, root.val);
+      }
+      // the node is not a leaf, has no right child, and has a left child
+      else {
+        root.val = predecessor(root);
+        root.left = deleteNode(root.left, root.val);
+      }
+    }
+    return root;
+  }
+
+  /*
+  One step right and then always left
+  */
+  public int successor(TreeNode root) {
+    root = root.right;
+    while (root.left != null) {
+      root = root.left;
+    }
+    return root.val;
+  }
+
+  /*
+  One step left and then always right
+  */
+  public int predecessor(TreeNode root) {
+    root = root.left;
+    while (root.right != null) {
+      root = root.right;
+    }
+    return root.val;
+  }
+
+  // 701
+  // 输入数据保证，新值和原始二叉搜索树中的任意节点值都不同。
+  public TreeNode insertIntoBST(TreeNode root, int val) {
+    if (root == null) {
+      root = new TreeNode(val);
+      return root;
+    }
+    if (root.val > val) {
+      root.left = insertIntoBST(root.left, val);
+    } else {
+      root.right = insertIntoBST(root.right, val);
+    }
+    return root;
+  }
+
+  // 104
+  public int maxDepth(TreeNode root) {
+    if (root == null) {
+      return 0;
+    }
+    var left = maxDepth(root.left);
+    var right = maxDepth(root.right);
+
+    return left > right ? left : right + 1;
+  }
+
+  // 236
+  public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null) {
+      return null;
+    }
+    if (root == p || root == q) {
+      return root;
+    }
+    var left = lowestCommonAncestor(root.left, p, q);
+    var right = lowestCommonAncestor(root.right, p, q);
+
+    if (left != null && right != null) {
+      return root;
+    }
+    if (left != null) {
+      return left;
+    }
+    return right;
+  }
+
+  // 938 二叉搜索树的范围和 easy
+  public int rangeSumBST(TreeNode root, int low, int high) {
+    if (root == null) {
+      return 0;
+    }
+    if (root.val > high) {
+      return rangeSumBST(root.left, low, high);
+    }
+    if (root.val < low) {
+      return rangeSumBST(root.right, low, high);
+    }
+    return root.val + rangeSumBST(root.left, low, high) + rangeSumBST(root.right, low, high);
+  }
+
   // 109
   public TreeNode sortedListToBST(ListNode head) {
     return buildTree(head, null);

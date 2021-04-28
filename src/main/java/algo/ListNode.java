@@ -7,13 +7,13 @@ class ListNode {
 
   void traverse(ListNode head) {
     for (ListNode p = head; p != null; p = p.next) {
-      // TODO
+      // do something here.
       System.out.println(p.val);
     }
   }
 
   void traverseRecursively(ListNode head) {
-    // TODO
+    // do something here.
     traverse(head.next);
   }
 

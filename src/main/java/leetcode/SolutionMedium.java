@@ -3,12 +3,596 @@ package leetcode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 public class SolutionMedium {
+
+  // 47 全排列 II
+  public List<List<Integer>> permuteUnique(int[] nums) {
+    List<List<Integer>> result = new LinkedList<>();
+    var list = new LinkedList<Integer>(); // 临时结果
+    var visited = new boolean[nums.length];
+    Arrays.sort(nums);
+    backtrack(nums, visited, list, result);
+    return result;
+  }
+
+  private void backtrack(int[] nums, boolean[] visited, LinkedList<Integer> list,
+      List<List<Integer>> result) {
+    // 长度一致，全排列
+    if (list.size() == nums.length) {
+
+    }
+  }
+
+  // 3 无重复字符的最长子串
+  public int lengthOfLongestSubstring(String s) {
+    Set<Character> set = new HashSet<>();
+    int n = s.length();
+    int right = -1, ans = 0;
+    for (int i = 0; i < n; ++i) {
+      if (i != 0) {
+        set.remove(s.charAt(i - 1));
+      }
+      while (right + 1 < n && !set.contains(s.charAt(right + 1))) {
+        set.add(s.charAt(right + 1));
+        ++right;
+      }
+      ans = Math.max(ans, right - i + 1);
+    }
+    return ans;
+  }
+
+  // 438 找到字符串中所有字母异位词
+  // 给定一个字符串 s 和一个非空字符串 p，
+  // 找到 s 中所有是 p 的字母异位词的子串，
+  // 返回这些子串的起始索引。
+  public List<Integer> findAnagrams(String s, String p) {
+    int[] freq = new int[26];
+
+    // 表示窗口内相差的字符的数量
+    int diff = 0;
+    // freq 统计频数
+    for (char c : p.toCharArray()) {
+      freq[c - 'a']++;
+      diff++;
+    }
+
+    int left = 0, right = 0, length = s.length();
+    char[] array = s.toCharArray();
+    List<Integer> result = new ArrayList<>();
+
+    while (right < length) {
+      char rightChar = array[right];
+
+      // 是 p 中的字符
+      if (freq[rightChar - 'a'] > 0) {
+        freq[rightChar - 'a']--;
+        // 差距减少
+        diff--;
+        right++;
+
+        //差距减少为0时 说明窗口内为所求
+        if (diff == 0) {
+          result.add(left);
+        }
+      } else {
+        // 两种情况
+        // 1. rightChar 是 p 以外的字符串如"c" "abc" "ab"
+        //    此时 left 和 right 都应该指向 c后面的位置
+        // 2. rightChar 是 p 内的字符串 但是是额外的一个 char 如第二个"b" 例 "abb" "ab"
+        //    此时 right 不变 left 应该指向第一个 b 后面的位置
+        // 对于第一种情况，left 和 right 都应该定位到 c，所以要恢复 freq 和 diff
+        // 对于第二种情况 此时 freq[array[right]-'a']=0
+        // 让 left 移动到第一个 b 后面的位置 这样就融入了新的 b（第二个b）
+        while (freq[array[right] - 'a'] <= 0 && left < right) {
+          freq[array[left] - 'a']++;
+          left++;
+          diff++;
+        }
+
+        if (left == right) {
+          if (freq[array[left] - 'a'] <= 0) {
+            //用来处理第一种情况 移动到这个字符后面的位置
+            left++;
+            right++;
+          }
+        }
+      }
+    }
+
+    return result;
+  }
+
+  // 567 字符串的排列
+  public boolean checkInclusion(String s1, String s2) {
+    int n = s1.length(), m = s2.length();
+    if (n > m) {
+      return false;
+    }
+    int[] cnt1 = new int[26];
+    int[] cnt2 = new int[26];
+    for (int i = 0; i < n; ++i) {
+      ++cnt1[s1.charAt(i) - 'a'];
+      ++cnt2[s2.charAt(i) - 'a'];
+    }
+    if (Arrays.equals(cnt1, cnt2)) {
+      return true;
+    }
+    for (int i = n; i < m; ++i) {
+      // 滑动
+      ++cnt2[s2.charAt(i) - 'a'];
+      --cnt2[s2.charAt(i - n) - 'a'];
+      if (Arrays.equals(cnt1, cnt2)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // 322 零钱兑换
+  public int coinChange(int[] coins, int amount) {
+    // 状态 dp[i] 表示金额为 i 时，组成的最小硬币个数
+    // 推导 dp[i]  = min(dp[i-1], dp[i-2], dp[i-5]) + 1, 前提 i-coins[j] > 0
+    // 初始化为最大值 dp[i]=amount+1
+    // 返回值 dp[n] or dp[n]>amount =>-1
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, amount + 1);
+    dp[0] = 0;
+    for (int i = 1; i <= amount; i++) {
+      for (int coin : coins) {
+        if (i - coin >= 0) {
+          dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+        }
+      }
+    }
+    return (dp[amount] > amount) ? -1 : dp[amount];
+  }
+
+  // 1143
+  public int longestCommonSubsequence(String text1, String text2) {
+    int m = text1.length(), n = text2.length();
+    int[][] dp = new int[m + 1][n + 1];
+    for (int i = 1; i <= m; i++) {
+      char c1 = text1.charAt(i - 1);
+      for (int j = 1; j <= n; j++) {
+        char c2 = text2.charAt(j - 1);
+        if (c1 == c2) {
+          dp[i][j] = dp[i - 1][j - 1] + 1;
+        } else {
+          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+        }
+      }
+    }
+    return dp[m][n];
+  }
+
+  // 139 单词拆分
+  public boolean wordBreak(String s, List<String> wordDict) {
+    // f[i] 表示前i个字符是否可以被切分
+    // f[i] = f[j] && s[j+1~i] in wordDict
+    // f[0] = true
+    // return f[len]
+    Set<String> wordDictSet = new HashSet<>(wordDict);
+    int m = s.length();
+    boolean[] dp = new boolean[m + 1];
+    dp[0] = true;
+    for (int i = 1; i <= m; i++) {
+      for (int j = 0; j < i; j++) {
+        if (dp[j] && wordDictSet.contains(s.substring(j, i))) {
+          dp[i] = true;
+          break;
+        }
+      }
+    }
+    return dp[m];
+  }
+
+
+  // 45 跳跃游戏 II
+  // 给定一个非负整数数组，你最初位于数组的第一个位置。
+  // 数组中的每个元素代表你在该位置可以跳跃的最大长度。
+  // 你的目标是使用最少的跳跃次数到达数组的最后一个位置。
+  // 假设你总是可以到达数组的最后一个位置。
+  public int jump(int[] nums) {
+    // 状态：f[i] 表示从起点到当前位置最小次数
+    // 推导：f[i] = f[j],a[j]+j >=i, min(f[j]+1)
+    // 初始化：f[0] = 0
+    // 结果：f[n-1]
+    int m = nums.length;
+    int[] dp = new int[m];
+    dp[0] = 0;
+    for (int i = 1; i < m; i++) {
+      // f[i] 最大值为i
+      dp[i] = i;
+      // 遍历之前结果取一个最小值+1
+      for (int j = 0; j < i; j++) {
+        if (nums[j] + j >= i) {
+          dp[i] = Math.min(dp[j] + 1, dp[i]);
+        }
+      }
+    }
+    return dp[m - 1];
+  }
+
+  // 动态规划 + 贪心优化
+  public int jumpV2(int[] nums) {
+    int m = nums.length;
+    int[] dp = new int[m];
+    dp[0] = 0;
+    for (int i = 1; i < m; i++) {
+      // 取第一个能跳到当前位置的点即可
+      // 因为跳跃次数的结果集是单调递增的，所以贪心思路是正确的
+      int index = 0;
+      while (index < m && index + nums[index] < i) {
+        index++;
+      }
+      dp[i] = dp[index] = 1;
+    }
+    return dp[m - 1];
+  }
+
+  // 55 跳跃游戏
+  // 给定一个非负整数数组 nums ，你最初位于数组的 第一个下标 。
+  // 数组中的每个元素代表你在该位置可以跳跃的最大长度。
+  // 判断你是否能够到达最后一个下标。
+  public boolean canJump(int[] nums) {
+    // 思路   看最后一跳
+    // 状态   f[i] 表示是否能从0跳到i
+    // 推导   f[i] = OR(f[j],j<i&&j能跳到i) 判断之前所有的点最后一跳是否能跳到当前点
+    // 初始化 f[0] = 0
+    // 结果   f[n-1]
+    int m = nums.length;
+    if (m == 0) {
+      return true;
+    }
+    boolean[] dp = new boolean[m];
+    dp[0] = true;
+    for (int i = 1; i < m; i++) {
+      for (int j = 0; j < i; j++) {
+        if (dp[j] && nums[j] + j >= i) {
+          dp[i] = true;
+          break;
+        }
+      }
+    }
+    return dp[m - 1];
+  }
+
+  // 633 平方数之和
+  public boolean judgeSquareSum(int c) {
+    int left = 0;
+    int right = (int) Math.sqrt(c);
+    while (left <= right) {
+      int sum = left * left + right * right;
+      if (sum == c) {
+        return true;
+      } else if (sum > c) {
+        right--;
+      } else {
+        left++;
+      }
+    }
+    return false;
+  }
+
+  // 63 不同路径 II
+  // 网格中的“障碍物”和“空位置”分别用 1 和 0 表示。
+  public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+
+    if (obstacleGrid[0][0] == 1) {
+      return 0;
+    }
+
+    int m = obstacleGrid.length, n = obstacleGrid[0].length;
+    // dp[i][j] 表示 i,j 到 0,0 路径数
+    int[][] dp = new int[m][n];
+    for (int i = 0; i < m; i++) {
+      for (int j = 0; j < n; j++) {
+        dp[i][j] = 1;
+      }
+    }
+    // 处理第 0 行
+    for (int i = 1; i < m; i++) {
+      if (obstacleGrid[i][0] == 1 || dp[i - 1][0] == 0) {
+        dp[i][0] = 0;
+      }
+    }
+    // 处理第 0 列
+    for (int j = 1; j < n; j++) {
+      if (obstacleGrid[0][j] == 1 || dp[0][j - 1] == 0) {
+        dp[0][j] = 0;
+      }
+    }
+
+    for (int i = 1; i < m; i++) {
+      for (int j = 1; j < n; j++) {
+        if (obstacleGrid[i][j] == 1) {
+          dp[i][j] = 0;
+        } else {
+          dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+        }
+      }
+    }
+    return dp[m - 1][n - 1];
+  }
+
+  // 64 最小路径和
+  public int minPathSum(int[][] grid) {
+    int m = grid.length, n = grid[0].length;
+    if (m == 0 || n == 0) {
+      return 0;
+    }
+    // 复用原来的矩阵列表
+    // 初始化：f[i][0]、f[0][j]
+    for (int i = 1; i < m; i++) {
+      grid[i][0] = grid[i][0] + grid[i - 1][0];
+    }
+    for (int j = 1; j < n; j++) {
+      grid[0][j] = grid[0][j] + grid[0][j - 1];
+    }
+    for (int i = 1; i < m; i++) {
+      for (int j = 1; j < n; j++) {
+        grid[i][j] = Math.min(grid[i][j - 1], grid[i - 1][j]) + grid[i][j];
+      }
+    }
+    return grid[m - 1][n - 1];
+  }
+
+  // 120
+  public int minimumTotal(List<List<Integer>> triangle) {
+    var l = triangle.size();
+    var dp = new int[l][l];
+
+    for (int i = 0; i < l; i++) {
+      for (int j = 0; j < i + 1; j++) {
+        dp[i][j] = triangle.get(i).get(j);
+      }
+    }
+    // 自底向上
+    for (int i = l - 2; i >= 0; i--) {
+      for (int j = 0; j < i + 1; j++) {
+        dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + triangle.get(i).get(j);
+      }
+    }
+    // 4、答案
+    return dp[0][0];
+  }
+
+  // 260
+  public int[] singleNumberIII(int[] nums) {
+    int diff = 0;
+    for (int num : nums) {
+      diff ^= num;
+    }
+    var result = new int[2];
+    // 去掉末尾的 1 后异或 diff 就得到最后一个 1 的位置
+    diff = (diff & (diff - 1)) ^ diff;
+    for (int num : nums) {
+      if ((num & diff) == 0) {
+        result[0] ^= num;
+      } else {
+        result[1] ^= num;
+      }
+    }
+    return result;
+  }
+
+  // 137
+  public int singleNumberII(int[] nums) {
+    // 统计每位 1 的个数
+    int result = 0;
+    for (int i = 0; i < 32; i++) {
+      int sum = 0;
+      for (int num : nums) {
+        // 统计1的个数
+        sum += (num >> i) & 1;
+      }
+      // 还原位 00^10=10，用 '|' 也可以
+      result ^= (sum % 3) << i;
+    }
+    return result;
+  }
+
+  // 200 岛屿数量
+  public int numIslands(char[][] grid) {
+    var count = 0;
+    int l = grid.length, w = grid[0].length;
+    for (int i = 0; i < l; i++) {
+      for (int j = 0; j < w; j++) {
+        if (grid[i][j] == '1' && dfs(grid, i, j) >= 1) {
+          count++;
+        }
+      }
+    }
+    return count;
+  }
+
+  private int dfs(char[][] grid, int i, int j) {
+    if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
+      return 0;
+    }
+    if (grid[i][j] == '1') {
+      grid[i][j] = 'x';
+      return dfs(grid, i - 1, j) + dfs(grid, i, j - 1) + dfs(grid, i + 1, j) + dfs(grid, i, j + 1)
+          + 1;
+    }
+    return 0;
+  }
+
+  // 1689 十-二进制数的最少数目
+  public int minPartitions(String n) {
+    int min = 0;
+    for (var c : n.toCharArray()) {
+      if (c - '0' > min) {
+        min = c - '0';
+      }
+    }
+    return min;
+  }
+
+  // 394 字符串编码
+  public String decodeString(String s) {
+    if (s.length() == 0) {
+      return "";
+    }
+    Deque<Character> stack = new LinkedList<>();
+    for (var chr : s.toCharArray()) {
+      if (chr == ']') {
+        Deque<Character> temp = new LinkedList<>();
+        while (!stack.isEmpty() && stack.peekLast() != '[') {
+          temp.offerFirst(stack.pollLast());
+        }
+        stack.pollLast();  // pop '['
+        // 拿数字
+        int times = 0, pow = 1;
+        while (!stack.isEmpty() && Character.isDigit(stack.peekLast())) {
+          assert (!stack.isEmpty());
+          times += pow * (stack.pollLast() - '0');
+          pow *= 10;
+        }
+
+        for (int i = 0; i < times; i++) {
+          for (var c : temp) {
+            stack.offerLast(c);
+          }
+        }
+      } else {
+        stack.offerLast(chr);
+      }
+    }
+
+    var sb = new StringBuilder();
+    for (var c : stack) {
+      sb.append(c);
+    }
+    return sb.toString();
+  }
+
+  // 150 逆波兰表达式求值
+  public int evalRPN(String[] tokens) {
+    var s = new Stack<Integer>();
+    for (String token : tokens) {
+      switch (token) {
+        case "+": {
+          var a1 = s.pop();
+          var a2 = s.pop();
+          s.push(a2 + a1);
+          break;
+        }
+        case "-": {
+          var a1 = s.pop();
+          var a2 = s.pop();
+          s.push(a2 - a1);
+          break;
+        }
+        case "*": {
+          var a1 = s.pop();
+          var a2 = s.pop();
+          s.push(a2 * a1);
+          break;
+        }
+        case "/": {
+          var a1 = s.pop();
+          var a2 = s.pop();
+          s.push(a2 / a1);
+          break;
+        }
+        default:
+          s.push(Integer.parseInt(token));
+          break;
+      }
+    }
+    return s.peek();
+  }
+
+  // 1011 & 410 (hard)
+  public int shipWithinDays(int[] weights, int D) {
+    int maxNum = 0, sum = 0;
+    for (var num : weights) {
+      sum += num;
+      if (num > maxNum) {
+        maxNum = num;
+      }
+    }
+    if (D == 1) {
+      return sum;
+    }
+    // 返回 和 的 最小值
+    int low = maxNum, high = sum, mid;
+    while (low < high) {
+      mid = low + (high - low) / 2;
+      if (calSum(mid, D, weights)) {
+        high = mid;
+      } else {
+        low = mid + 1;
+      }
+    }
+    return low;
+  }
+
+  boolean calSum(int mid, int m, int[] nums) {
+    int sum = 0, count = 0;
+    for (var num : nums) {
+      sum += num;
+      if (sum > mid) {
+        sum = num;
+        count++;
+        // 分成 m 块，只需要插桩 m -1 个
+        if (count > m - 1) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
+  // 807
+  public int maxIncreaseKeepingSkyline(int[][] grid) {
+    int l = grid.length, w = grid[0].length;
+    int[] rowMax = new int[l];
+    int[] colMax = new int[w];
+
+    for (int r = 0; r < l; ++r) {
+      for (int c = 0; c < w; ++c) {
+        rowMax[r] = Math.max(rowMax[r], grid[r][c]);
+        colMax[c] = Math.max(colMax[c], grid[r][c]);
+      }
+    }
+
+    int ans = 0;
+    for (int r = 0; r < l; ++r) {
+      for (int c = 0; c < w; ++c) {
+        ans += Math.min(rowMax[r], colMax[c]) - grid[r][c];
+      }
+    }
+
+    return ans;
+  }
+
+  // 1833
+  public int maxIceCream(int[] costs, int coins) {
+    int ans = 0;
+    Arrays.sort(costs);
+
+    for (var cost : costs) {
+      if (coins >= cost) {
+        ans++;
+        coins -= cost;
+      }
+      if (coins <= 0) {
+        break;
+      }
+    }
+    return ans;
+  }
 
   // 264
   public int nthUglyNumber(int n) {

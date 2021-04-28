@@ -7,6 +7,31 @@ import java.util.Set;
 
 public class SolutionEasy {
 
+  // 344 反转字符串
+  public void reverseString(char[] s) {
+    int n = s.length;
+    for (int l = 0, r = n - 1; l < r; ++l, --r) {
+      char tmp = s[l];
+      s[l] = s[r];
+      s[r] = tmp;
+    }
+  }
+
+  // 70 爬楼梯
+  public int climbStairs(int n) {
+    // f[i] = f[i-1] + f[i-2]
+    if (n == 1 || n == 0) {
+      return n;
+    }
+    int[] dp = new int[n + 1];
+    dp[1] = 1;
+    dp[2] = 2;
+    for (int i = 3; i <= n; i++) {
+      dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    return dp[n];
+  }
+
   // 121
   public int maxProfit(int[] prices) {
     int minPrice = Integer.MAX_VALUE;

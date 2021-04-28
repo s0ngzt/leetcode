@@ -11,6 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+
+/**
+ * Stop adding more solutions here!
+ */
 class Solution {
 
   // 223
@@ -191,24 +195,6 @@ class Solution {
       ans += (x + y) / (y + 1) * (y + 1);
     }
     return ans;
-  }
-
-  // 1143
-  public int longestCommonSubsequence(String text1, String text2) {
-    int m = text1.length(), n = text2.length();
-    int[][] dp = new int[m + 1][n + 1];
-    for (int i = 1; i <= m; i++) {
-      char c1 = text1.charAt(i - 1);
-      for (int j = 1; j <= n; j++) {
-        char c2 = text2.charAt(j - 1);
-        if (c1 == c2) {
-          dp[i][j] = dp[i - 1][j - 1] + 1;
-        } else {
-          dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
-        }
-      }
-    }
-    return dp[m][n];
   }
 
   // 面试题 17.21. 直方图的水量
@@ -679,43 +665,6 @@ class Solution {
       }
     }
     return ans;
-  }
-
-  // 150 逆波兰表达式求值
-  public int evalRPN(String[] tokens) {
-    var s = new Stack<Integer>();
-    for (String token : tokens) {
-      switch (token) {
-        case "+": {
-          var a1 = s.pop();
-          var a2 = s.pop();
-          s.push(a2 + a1);
-          break;
-        }
-        case "-": {
-          var a1 = s.pop();
-          var a2 = s.pop();
-          s.push(a2 - a1);
-          break;
-        }
-        case "*": {
-          var a1 = s.pop();
-          var a2 = s.pop();
-          s.push(a2 * a1);
-          break;
-        }
-        case "/": {
-          var a1 = s.pop();
-          var a2 = s.pop();
-          s.push(a2 / a1);
-          break;
-        }
-        default:
-          s.push(Integer.parseInt(token));
-          break;
-      }
-    }
-    return s.peek();
   }
 
   // 78

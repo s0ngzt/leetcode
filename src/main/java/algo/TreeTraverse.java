@@ -11,64 +11,113 @@ import java.util.Stack;
 public class TreeTraverse {
 
   /**
-   * 先序遍历
+   * 先序遍历 递归
+   *
+   * @param root 根节点
+   */
+  public void preorderTraversal(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    System.out.println(root.val);
+    preorderTraversal(root.left);
+    preorderTraversal(root.right);
+  }
+
+  /**
+   * 先序遍历 非递归
    *
    * @param root 根节点
    * @return 遍历结果
    */
-  public List<Integer> preorderTraversal(TreeNode root) {
-    List<Integer> res = new ArrayList<>();
+  public List<Integer> preorderTraversalNonRec(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
     if (root == null) {
-      return res;
+      return result;
     }
     Deque<TreeNode> stack = new LinkedList<>();
     TreeNode node = root;
     while (!stack.isEmpty() || node != null) {
       while (node != null) {
-        res.add(node.val);
+        // 先序遍历，先保存结果
+        result.add(node.val);
         stack.push(node);
         node = node.left;
       }
       node = stack.pop();
       node = node.right;
     }
-    return res;
+    return result;
   }
 
   /**
-   * 中序遍历
+   * 中序遍历 递归
+   *
+   * @param root 根节点
+   */
+  public void inorderTraversal(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    preorderTraversal(root.left);
+    System.out.println(root.val);
+    preorderTraversal(root.right);
+  }
+
+  /**
+   * 中序遍历 非递归
    *
    * @param root 根节点
    * @return 遍历结果
    */
-  public List<Integer> inorderTraversal(TreeNode root) {
-    List<Integer> res = new ArrayList<>();
+  public List<Integer> inorderTraversalNonRec(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
     Stack<TreeNode> stack = new Stack<>();
     while (root != null || !stack.isEmpty()) {
       while (root != null) {
         stack.push(root);
-        root = root.left;
+        root = root.left; // 一直向左
       }
       root = stack.pop();
-      res.add(root.val);
+      result.add(root.val); // 保存结果
       root = root.right;
     }
-    return res;
+    return result;
   }
 
   /**
-   * 后序遍历
+   * 后序遍历 递归
+   *
+   * @param root 根节点
+   */
+  public void postorderTraversal(TreeNode root) {
+    if (root == null) {
+      return;
+    }
+    preorderTraversal(root.left);
+    preorderTraversal(root.right);
+    System.out.println(root.val);
+  }
+
+  /**
+   * 后序遍历 非递归
    *
    * @param root 根节点
    * @return 遍历结果
    */
-  public List<Integer> postorderTraversal(TreeNode root) {
-    List<Integer> res = new ArrayList<>();
-    Deque<TreeNode> stack = new LinkedList<>();
+  public List<Integer> postorderTraversalNonRec(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    if (root == null) {
+      return result;
+    }
 
+    Deque<TreeNode> stack = new LinkedList<>();
     while (root != null || !stack.isEmpty()) {
       while (root != null) {
-        res.add(root.val);
+        result.add(root.val);
         stack.push(root);
         root = root.right;
       }
@@ -77,8 +126,8 @@ public class TreeTraverse {
       root = cur.left;
     }
 
-    Collections.reverse(res);
-    return res;
+    Collections.reverse(result);
+    return result;
   }
 
   /**
