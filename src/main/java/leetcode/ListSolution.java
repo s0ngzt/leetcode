@@ -2,6 +2,17 @@ package leetcode;
 
 class ListSolution {
 
+  // 1290
+  public int getDecimalValue(ListNode head) {
+    int sum = 0;
+    var f = head;
+    while (f != null) {
+      sum = sum * 2 + f.val;
+      f = f.next;
+    }
+    return sum;
+  }
+
   // 24 medium 两两交换链表中的节点
   public ListNode swapPairs(ListNode head) {
     return swapPairsHelper(head);

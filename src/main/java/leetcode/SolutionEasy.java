@@ -7,6 +7,28 @@ import java.util.Set;
 
 public class SolutionEasy {
 
+  // 1678
+  public String interpret(String command) {
+    StringBuilder sb = new StringBuilder();
+    var chars = command.toCharArray();
+    int index = 0;
+    while (index < chars.length) {
+      if (chars[index] == 'G') {
+        sb.append('G');
+        index++;
+      } else {
+        if (chars[index + 1] == ')') {
+          sb.append('o');
+          index += 2;
+        } else {
+          sb.append("al");
+          index += 4;
+        }
+      }
+    }
+    return sb.toString();
+  }
+
   // 344 反转字符串
   public void reverseString(char[] s) {
     int n = s.length;

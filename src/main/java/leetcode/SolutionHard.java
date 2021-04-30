@@ -7,6 +7,34 @@ import java.util.TreeSet;
 
 public class SolutionHard {
 
+  // 403 青蛙过河
+  public boolean canCross(int[] stones) {
+    int numStone = stones.length;
+
+    boolean[][] dp = new boolean[numStone][numStone];
+    dp[0][0] = true;
+    for (int i = 1; i < numStone; i++) {
+      if (stones[i] - stones[i - 1] > i) {
+        return false;
+      }
+    }
+
+    for (int i = 1; i < numStone; i++) {
+      for (int j = i - 1; j >= 0; j--) {
+        int k = stones[i] - stones[j];
+        if (k > j + 1) {
+          break;
+        }
+        dp[i][k] = dp[j][k - 1] || dp[j][k] || dp[j][k + 1];
+        if (i == numStone - 1 && dp[i][k]) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
 
   // 72 编辑距离
   public int minDistance(String word1, String word2) {
