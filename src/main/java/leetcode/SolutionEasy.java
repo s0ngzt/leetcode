@@ -2,10 +2,34 @@ package leetcode;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 public class SolutionEasy {
+
+  // 690 员工的重要性
+  public int getImportance(List<Employee> employees, int id) {
+    Map<Integer, Employee> map = new HashMap<>();
+    for (Employee employee : employees) {
+      map.put(employee.id, employee);
+    }
+    int total = 0;
+    Queue<Integer> queue = new LinkedList<>();
+    queue.offer(id);
+    while (!queue.isEmpty()) {
+      int curId = queue.poll();
+      Employee employee = map.get(curId);
+      total += employee.importance;
+      List<Integer> subordinates = employee.subordinates;
+      for (int subId : subordinates) {
+        queue.offer(subId);
+      }
+    }
+    return total;
+  }
 
   // 1678
   public String interpret(String command) {

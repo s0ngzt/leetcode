@@ -14,21 +14,79 @@ import java.util.Stack;
 
 public class SolutionMedium {
 
-  // 47 全排列 II
-  public List<List<Integer>> permuteUnique(int[] nums) {
-    List<List<Integer>> result = new LinkedList<>();
-    var list = new LinkedList<Integer>(); // 临时结果
-    var visited = new boolean[nums.length];
-    Arrays.sort(nums);
-    backtrack(nums, visited, list, result);
-    return result;
+  // 740
+  public int deleteAndEarn(int[] nums) {
+    if (nums == null || nums.length == 0) {
+      return 0;
+    }
+    if (nums.length == 1) {
+      return nums[0];
+    }
+    int len = nums.length;
+    int max = nums[0];
+    for (int i = 1; i < len; i++) {
+      max = Math.max(max, nums[i]);
+    }
+    // new 一个新数组 <count>
+    int[] count = new int[max + 1];
+    for (int item : nums) {
+      count[item]++;
+    }
+    int[] dp = new int[max + 1];
+    dp[1] = count[1]; // count[1] * 1
+    dp[2] = Math.max(dp[1], count[2] * 2);
+    // 动态规划求解
+    for (int i = 3; i <= max; ++i) {
+      dp[i] = Math.max(dp[i - 1], dp[i - 2] + i * count[i]);
+    }
+    return dp[max];
   }
 
-  private void backtrack(int[] nums, boolean[] visited, LinkedList<Integer> list,
-      List<List<Integer>> result) {
-    // 长度一致，全排列
-    if (list.size() == nums.length) {
+  // 554 砖墙
+  public int leastBricks(List<List<Integer>> wall) {
+    int n = wall.size();
+    Map<Integer, Integer> map = new HashMap<>();
+    for (int i = 0, sum = 0; i < n; i++, sum = 0) {
+      for (int cur : wall.get(i)) {
+        sum += cur;
+        map.put(sum, map.getOrDefault(sum, 0) + 1);
+      }
+      map.remove(sum);
+    }
+    int ans = n;
+    for (int u : map.keySet()) {
+      int cnt = map.get(u);
+      ans = Math.min(ans, n - cnt);
+    }
+    return ans;
+  }
 
+  // 47 全排列 II
+  public List<List<Integer>> permuteUnique(int[] nums) {
+    List<List<Integer>> res = new ArrayList<>();
+    List<Integer> perm = new ArrayList<>();
+    boolean[] visited = new boolean[nums.length];
+    Arrays.sort(nums);
+    backtrack(nums, visited, perm, res);
+    return res;
+  }
+
+  private void backtrack(int[] nums, boolean[] visited, List<Integer> perm,
+      List<List<Integer>> res) {
+    if (perm.size() == nums.length) {
+      res.add(new ArrayList<>(perm));
+      return;
+    }
+    for (int i = 0; i < nums.length; i++) {
+      // 已经添加过的元素 或 上一个元素和当前相同，且没有访问过
+      if (visited[i] || (i > 0 && nums[i] == nums[i - 1] && !visited[i - 1])) {
+        continue;
+      }
+      perm.add(nums[i]);
+      visited[i] = true;
+      backtrack(nums, visited, perm, res);
+      visited[i] = false;
+      perm.remove(perm.size() - 1);
     }
   }
 
