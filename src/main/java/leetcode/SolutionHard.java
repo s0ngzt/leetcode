@@ -1,11 +1,82 @@
 package leetcode;
 
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.TreeSet;
 
 public class SolutionHard {
+
+  // 1269
+  public int numWays(int steps, int arrLen) {
+    final int MODULO = 1000000007;
+    int maxColumn = Math.min(arrLen - 1, steps);
+    int[] dp = new int[maxColumn + 1];
+    dp[0] = 1;
+    for (int i = 1; i <= steps; i++) {
+      int[] dpNext = new int[maxColumn + 1];
+      for (int j = 0; j <= maxColumn; j++) {
+        dpNext[j] = dp[j];
+        if (j - 1 >= 0) {
+          dpNext[j] = (dpNext[j] + dp[j - 1]) % MODULO;
+        }
+        if (j + 1 <= maxColumn) {
+          dpNext[j] = (dpNext[j] + dp[j + 1]) % MODULO;
+        }
+      }
+      dp = dpNext;
+    }
+    return dp[0];
+  }
+
+  // 1723
+  public int minimumTimeRequired(int[] jobs, int k) {
+    Arrays.sort(jobs);
+    int low = 0, high = jobs.length - 1;
+    while (low < high) {
+      int temp = jobs[low];
+      jobs[low] = jobs[high];
+      jobs[high] = temp;
+      low++;
+      high--;
+    }
+    int l = jobs[0], r = Arrays.stream(jobs).sum();
+    while (l < r) {
+      int mid = (l + r) >> 1;
+      if (check(jobs, k, mid)) {
+        r = mid;
+      } else {
+        l = mid + 1;
+      }
+    }
+    return l;
+  }
+
+  private boolean check(int[] jobs, int k, int limit) {
+    int[] workloads = new int[k];
+    return backtrack(jobs, workloads, 0, limit);
+  }
+
+  private boolean backtrack(int[] jobs, int[] workloads, int i, int limit) {
+    if (i >= jobs.length) {
+      return true;
+    }
+    int cur = jobs[i];
+    for (int j = 0; j < workloads.length; ++j) {
+      if (workloads[j] + cur <= limit) {
+        workloads[j] += cur;
+        if (backtrack(jobs, workloads, i + 1, limit)) {
+          return true;
+        }
+        workloads[j] -= cur;
+      }
+      if (workloads[j] == 0 || workloads[j] + cur == limit) {
+        break;
+      }
+    }
+    return false;
+  }
 
   // 1473
   public int minCost(int[] hs, int[][] cost, int m, int n, int t) {

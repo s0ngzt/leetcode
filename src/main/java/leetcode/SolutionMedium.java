@@ -2,6 +2,7 @@ package leetcode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Deque;
 import java.util.HashMap;
@@ -9,10 +10,255 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
 public class SolutionMedium {
+
+  // 1310 子数组异或查询
+  // 前缀和
+  public int[] xorQueries(int[] arr, int[][] queries) {
+    int n = arr.length;
+    int[] acc = new int[n + 1];
+    for (int i = 0; i < n; i++) {
+      acc[i + 1] = acc[i] ^ arr[i];
+    }
+    int lenQueries = queries.length;
+    int[] result = new int[lenQueries];
+
+    for (int i = 0; i < lenQueries; i++) {
+      result[i] = acc[queries[i][1] + 1] ^ acc[queries[i][0]];
+    }
+    return result;
+  }
+
+  // 1734 解码异或后的排列
+  public int[] decode(int[] encoded) {
+    int n = encoded.length + 1;
+    int total = 0;
+    for (int i = 1; i <= n; i++) {
+      total ^= i;
+    }
+    int odd = 0;
+    for (int i = 1; i < n - 1; i += 2) {
+      odd ^= encoded[i];
+    }
+    int[] perm = new int[n];
+    perm[0] = total ^ odd; // main
+    for (int i = 0; i < n - 1; i++) {
+      perm[i + 1] = perm[i] ^ encoded[i];
+    }
+    return perm;
+  }
+
+  // 1482 制作 m 束花所需的最少天数
+  public int minDays(int[] bloomDay, int m, int k) {
+    int n = bloomDay.length;
+    if (m * k > n) {
+      return -1;
+    }
+    int left = Integer.MAX_VALUE, right = Integer.MIN_VALUE, mid;
+    for (var day : bloomDay) {
+      if (day < left) {
+        left = day;
+      }
+      if (day > right) {
+        right = day;
+      }
+    }
+    while (left < right) {
+      mid = left + (right - left) / 2;
+      if (canMake(bloomDay, mid, m, k)) {
+        right = mid;
+      } else {
+        left = mid + 1;
+      }
+    }
+    return left;
+  }
+
+  private boolean canMake(int[] bloomDay, int days, int m, int k) {
+    int flower = 0, bouquet = 0;
+    for (int j : bloomDay) {
+      if (j <= days) {
+        flower += 1;
+        if (flower == k) {
+          bouquet += 1;
+          flower = 0;
+        }
+      } else {
+        flower = 0;
+      }
+      if (bouquet >= m) {
+        break;
+      }
+    }
+    return bouquet >= m;
+  }
+
+  // 542 01矩阵 BFS
+  public int[][] updateMatrix(int[][] matrix) {
+    int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int m = matrix.length, n = matrix[0].length;
+    int[][] minDistance = new int[m][n];
+    boolean[][] seen = new boolean[m][n];
+    Queue<int[]> queue = new LinkedList<>();
+    // 将所有的 0 添加进初始队列中
+    for (int i = 0; i < m; ++i) {
+      for (int j = 0; j < n; ++j) {
+        if (matrix[i][j] == 0) {
+          queue.offer(new int[]{i, j});
+          seen[i][j] = true;
+        }
+      }
+    }
+
+    // BFS
+    while (!queue.isEmpty()) {
+      int[] cell = queue.poll();
+      int i = cell[0], j = cell[1];
+      for (int d = 0; d < 4; ++d) {
+        int ni = i + directions[d][0];
+        int nj = j + directions[d][1];
+        if (ni >= 0 && ni < m && nj >= 0 && nj < n && !seen[ni][nj]) {
+          minDistance[ni][nj] = minDistance[i][j] + 1;
+          queue.offer(new int[]{ni, nj});
+          seen[ni][nj] = true;
+        }
+      }
+    }
+    return minDistance;
+  }
+
+  // 739
+  public int[] dailyTemperatures(int[] T) {
+    int length = T.length;
+    int[] ans = new int[length];
+    Deque<Integer> stack = new LinkedList<>();
+    for (int i = 0; i < length; i++) {
+      int temperature = T[i];
+      while (!stack.isEmpty() && temperature > T[stack.peek()]) {
+        int prevIndex = stack.pop();
+        ans[prevIndex] = i - prevIndex;
+      }
+      stack.push(i);
+    }
+    return ans;
+  }
+
+  // 279 完全平方数
+  public int numSquares(int n) {
+    int[] dp = new int[n + 1];
+    Arrays.fill(dp, Integer.MAX_VALUE);
+    // bottom case
+    dp[0] = 0;
+
+    // pre-calculate the square numbers.
+    int max_square_index = (int) Math.sqrt(n) + 1;
+    int[] square_nums = new int[max_square_index];
+    for (int i = 1; i < max_square_index; ++i) {
+      square_nums[i] = i * i;
+    }
+
+    for (int i = 1; i <= n; i++) {
+      for (int s = 1; s < max_square_index; ++s) {
+        if (i < square_nums[s]) {
+          break;
+        }
+        dp[i] = Math.min(dp[i], dp[i - square_nums[s]] + 1);
+      }
+    }
+    return dp[n];
+  }
+
+  public int numSquaresBFS(int n) {
+    ArrayList<Integer> square_nums = new ArrayList<>();
+    for (int i = 1; i * i <= n; ++i) {
+      square_nums.add(i * i);
+    }
+
+    Set<Integer> queue = new HashSet<>();
+    queue.add(n);
+
+    int level = 0;
+    while (queue.size() > 0) {
+      level += 1;
+      Set<Integer> next_queue = new HashSet<>();
+
+      for (Integer remainder : queue) {
+        for (Integer square : square_nums) {
+          if (remainder.equals(square)) {
+            return level;
+          } else if (remainder < square) {
+            break;
+          } else {
+            next_queue.add(remainder - square);
+          }
+        }
+      }
+      queue = next_queue;
+    }
+    return level;
+  }
+
+  // 752 打开键盘锁
+  public int openLock(String[] deadends, String target) {
+    Set<String> dead = new HashSet<>();
+    Collections.addAll(dead, deadends);
+
+    Queue<String> queue = new LinkedList<>();
+    queue.offer("0000");
+    queue.offer(null);
+
+    Set<String> seen = new HashSet<>(); // 避免重复访问
+    seen.add("0000");
+
+    int depth = 0;
+    while (!queue.isEmpty()) {
+      String node = queue.poll();
+      if (node == null) {
+        depth++;
+        if (queue.peek() != null) {
+          queue.offer(null); // 判断 是否加 depth
+        }
+      } else if (node.equals(target)) {
+        return depth;
+      } else if (!dead.contains(node)) {
+        for (int i = 0; i < 4; ++i) {
+          for (int d = -1; d <= 1; d += 2) {
+            int y = ((node.charAt(i) - '0') + d + 10) % 10;
+            String nei = node.substring(0, i) + ("" + y) + node.substring(i + 1);
+            if (!seen.contains(nei)) {
+              seen.add(nei);
+              queue.offer(nei);
+            }
+          }
+        }
+      }
+    }
+    return -1;
+  }
+
+  // 648 单词替换
+  public String replaceWords(List<String> dictionary, String sentence) {
+    Set<String> rootSet = new HashSet<>(dictionary);
+    StringBuilder ans = new StringBuilder();
+    for (String word : sentence.split("\\s+")) {
+      String prefix = "";
+      for (int i = 1; i <= word.length(); ++i) {
+        prefix = word.substring(0, i);
+        if (rootSet.contains(prefix)) {
+          break;
+        }
+      }
+      if (ans.length() > 0) {
+        ans.append(" ");
+      }
+      ans.append(prefix);
+    }
+    return ans.toString();
+  }
 
   // 740
   public int deleteAndEarn(int[] nums) {

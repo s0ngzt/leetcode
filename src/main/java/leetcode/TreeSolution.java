@@ -9,6 +9,34 @@ import java.util.Stack;
 
 class TreeSolution {
 
+  // 872 easy 叶子相似的树
+  public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+    List<Integer> seq1 = new ArrayList<>();
+    if (root1 != null) {
+      dfsLeftSimilar(root1, seq1);
+    }
+
+    List<Integer> seq2 = new ArrayList<>();
+    if (root2 != null) {
+      dfsLeftSimilar(root2, seq2);
+    }
+
+    return seq1.equals(seq2);
+  }
+
+  public void dfsLeftSimilar(TreeNode node, List<Integer> seq) {
+    if (node.left == null && node.right == null) {
+      seq.add(node.val);
+    } else {
+      if (node.left != null) {
+        dfsLeftSimilar(node.left, seq);
+      }
+      if (node.right != null) {
+        dfsLeftSimilar(node.right, seq);
+      }
+    }
+  }
+
   // 450 medium 删除二叉搜索树中的节点
   public TreeNode deleteNode(TreeNode root, int key) {
     if (root == null) {
