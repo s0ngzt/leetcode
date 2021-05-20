@@ -14,7 +14,281 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
-public class SolutionMedium {
+class SolutionMedium {
+
+  // 229 求众数 II
+  public List<Integer> majorityElement(int[] nums) {
+    List<Integer> res = new ArrayList<>();
+    if (nums == null || nums.length == 0) {
+      return res;
+    }
+    // 初始化两个候选人 candidate，和他们的计票
+    int candidate1 = nums[0], count1 = 0;
+    int candidate2 = nums[0], count2 = 0;
+
+    // 摩尔投票法，分为两个阶段：配对阶段和计数阶段
+    // 配对阶段
+    for (int num : nums) {
+      // 投票
+      if (candidate1 == num) {
+        count1++;
+        continue;
+      }
+      if (candidate2 == num) {
+        count2++;
+        continue;
+      }
+
+      // 第 1 个候选人配对
+      if (count1 == 0) {
+        candidate1 = num;
+        count1++;
+        continue;
+      }
+      // 第 2 个候选人配对
+      if (count2 == 0) {
+        candidate2 = num;
+        count2++;
+        continue;
+      }
+
+      count1--;
+      count2--;
+    }
+
+    // 计数阶段
+    // 找到了两个候选人之后，需要确定票数是否满足大于 N/3
+    count1 = 0;
+    count2 = 0;
+    for (int num : nums) {
+      if (candidate1 == num) {
+        count1++;
+      } else if (candidate2 == num) {
+        count2++;
+      }
+    }
+
+    if (count1 > nums.length / 3) {
+      res.add(candidate1);
+    }
+    if (count2 > nums.length / 3) {
+      res.add(candidate2);
+    }
+
+    return res;
+  }
+
+  // 692 前 K 个高频单词
+  public List<String> topKFrequent(String[] words, int k) {
+    Map<String, Integer> cnt = new HashMap<>();
+    for (String word : words) {
+      cnt.put(word, cnt.getOrDefault(word, 0) + 1);
+    }
+    List<String> rec = new ArrayList<>();
+    for (Map.Entry<String, Integer> entry : cnt.entrySet()) {
+      rec.add(entry.getKey());
+    }
+    rec.sort((word1, word2) -> cnt.get(word1).equals(cnt.get(word2)) ? word1.compareTo(word2)
+        : cnt.get(word2) - cnt.get(word1));
+    return rec.subList(0, k);
+  }
+
+  // 215 数组中的第 K 个最大元素
+  public int findKthLargest(int[] nums, int k) {
+    int heapSize = nums.length;
+    buildMaxHeap(nums, heapSize);
+    for (int i = nums.length - 1; i >= nums.length - k + 1; --i) {
+      swap(nums, 0, i);
+      --heapSize;
+      maxHeapify(nums, 0, heapSize);
+    }
+    return nums[0];
+  }
+
+  private void buildMaxHeap(int[] a, int heapSize) {
+    for (int i = heapSize / 2; i >= 0; --i) {
+      maxHeapify(a, i, heapSize);
+    }
+  }
+
+  private void maxHeapify(int[] a, int i, int heapSize) {
+    int l = i * 2 + 1, r = i * 2 + 2, largest = i;
+    if (l < heapSize && a[l] > a[largest]) {
+      largest = l;
+    }
+    if (r < heapSize && a[r] > a[largest]) {
+      largest = r;
+    }
+    if (largest != i) {
+      swap(a, i, largest);
+      maxHeapify(a, largest, heapSize);
+    }
+  }
+
+  private void swap(int[] a, int i, int j) {
+    int temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+
+  // 1738 找出第 K 大的异或坐标值
+  public int kthLargestValue(int[][] matrix, int k) {
+    int m = matrix.length, n = matrix[0].length;
+    int[][] pre = new int[m + 1][n + 1];
+    List<Integer> results = new ArrayList<>();
+    for (int i = 1; i <= m; ++i) {
+      for (int j = 1; j <= n; ++j) {
+        pre[i][j] = pre[i - 1][j] ^ pre[i][j - 1] ^ pre[i - 1][j - 1] ^ matrix[i - 1][j - 1];
+        results.add(pre[i][j]);
+      }
+    }
+
+    results.sort((num1, num2) -> num2 - num1);
+    return results.get(k - 1);
+  }
+
+  // 1442 形成两个异或相等数组的三元组数目
+  public int countTriplets(int[] arr) {
+    int n = arr.length;
+    int[] acc = new int[n + 1];
+    for (int i = 1; i <= n; i += 1) {
+      acc[i] = acc[i - 1] ^ arr[i - 1];
+    }
+    Map<Integer, Integer> count = new HashMap<>();
+    Map<Integer, Integer> total = new HashMap<>();
+    int ans = 0;
+    for (int k = 0; k < n; ++k) {
+      if (count.containsKey(acc[k + 1])) {
+        ans += count.get(acc[k + 1]) * k - total.get(acc[k + 1]);
+      }
+      count.put(acc[k], count.getOrDefault(acc[k], 0) + 1);
+      total.put(acc[k], total.getOrDefault(acc[k], 0) + k);
+    }
+    return ans;
+  }
+
+  public int findMaximumXOR(int[] nums) {
+    final int HIGH_BIT = 30;
+
+    int x = 0;
+    for (int k = HIGH_BIT; k >= 0; --k) {
+      Set<Integer> seen = new HashSet<>();
+      for (int num : nums) {
+        seen.add(num >> k);
+      }
+
+      int xNext = x * 2 + 1;
+      boolean found = false;
+
+      for (int num : nums) {
+        if (seen.contains(xNext ^ (num >> k))) {
+          found = true;
+          break;
+        }
+      }
+
+      if (found) {
+        x = xNext;
+      } else {
+        x = xNext - 1;
+      }
+    }
+    return x;
+  }
+
+  // 12 整数转罗马数字
+  public String intToRoman(int num) {
+    int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+    String[] symbols = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+    StringBuilder roman = new StringBuilder();
+    for (int i = 0; i < values.length; ++i) {
+      int value = values[i];
+      String symbol = symbols[i];
+      while (num >= value) {
+        num -= value;
+        roman.append(symbol);
+      }
+      if (num == 0) {
+        break;
+      }
+    }
+    return roman.toString();
+  }
+
+  // 5 最长回文子串
+  public String longestPalindrome(String s) {
+    int len = s.length();
+    if (len < 2) {
+      return s;
+    }
+
+    int maxLen = 1;
+    int begin = 0;
+    // dp[i][j] 表示 s[i..j] 是否是回文串
+    boolean[][] dp = new boolean[len][len];
+    // 初始化：所有长度为 1 的子串都是回文串
+    for (int i = 0; i < len; i++) {
+      dp[i][i] = true;
+    }
+
+    char[] charArray = s.toCharArray();
+    // 递推开始
+    // 先枚举子串长度
+    for (int L = 2; L <= len; L++) {
+      // 枚举左边界，左边界的上限设置可以宽松一些
+      for (int i = 0; i < len; i++) {
+        // 由 L 和 i 可以确定右边界，即 j - i + 1 = L 得
+        int j = L + i - 1;
+        // 如果右边界越界，就可以退出当前循环
+        if (j >= len) {
+          break;
+        }
+
+        if (charArray[i] != charArray[j]) {
+          dp[i][j] = false;
+        } else {
+          if (j - i < 3) {
+            dp[i][j] = true;
+          } else {
+            dp[i][j] = dp[i + 1][j - 1];
+          }
+        }
+
+        // 只要 dp[i][L] == true 成立，就表示子串 s[i..L] 是回文，此时记录回文长度和起始位置
+        if (dp[i][j] && j - i + 1 > maxLen) {
+          maxLen = j - i + 1;
+          begin = i;
+        }
+      }
+    }
+    return s.substring(begin, begin + maxLen);
+  }
+
+  // 中心扩散法
+  public String longestPalindromeCenter(String s) {
+    if (s == null || s.length() < 1) {
+      return "";
+    }
+    int start = 0, end = 0;
+    for (int i = 0; i < s.length(); i++) {
+      int len1 = expandAroundCenter(s, i, i);
+      int len2 = expandAroundCenter(s, i, i + 1);
+      int len = Math.max(len1, len2);
+      if (len > end - start) {
+        start = i - (len - 1) / 2;
+        end = i + len / 2;
+      }
+    }
+    return s.substring(start, end + 1);
+  }
+
+  public int expandAroundCenter(String s, int left, int right) {
+    while (left >= 0 && right < s.length() && s.charAt(left) == s.charAt(right)) {
+      --left;
+      ++right;
+    }
+    return right - left - 1;
+  }
 
   // 1310 子数组异或查询
   // 前缀和

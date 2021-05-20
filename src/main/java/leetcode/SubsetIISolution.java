@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SubsetIISolution {
+class SubsetIISolution {
 
   List<Integer> l;
   List<List<Integer>> res;

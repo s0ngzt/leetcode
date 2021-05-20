@@ -8,7 +8,42 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 
-public class SolutionEasy {
+class SolutionEasy {
+
+  // 169 多数元素
+  public int majorityElement(int[] nums) {
+    int candidate = nums[0], count = 1;
+    for (int i = 1; i < nums.length; ++i) {
+      if (candidate == nums[i]) {
+        ++count;
+      } else if (--count == 0) {
+        candidate = nums[i];
+        count = 1;
+      }
+    }
+    return candidate;
+  }
+
+  // 557 反转字符串中的单词 III
+  public String reverseWords(String s) {
+    StringBuilder ans = new StringBuilder();
+    int length = s.length();
+    int i = 0;
+    while (i < length) {
+      int start = i;
+      while (i < length && s.charAt(i) != ' ') {
+        i++;
+      }
+      for (int p = start; p < i; p++) {
+        ans.append(s.charAt(start + i - 1 - p));
+      }
+      while (i < length && s.charAt(i) == ' ') {
+        i++;
+        ans.append(' ');
+      }
+    }
+    return ans.toString();
+  }
 
   // 733 图像渲染
   public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
-public class TreeTraverse {
+class TreeTraverse {
 
   /**
    * 先序遍历 递归

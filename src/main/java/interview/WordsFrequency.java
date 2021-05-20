@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 // 面试题 16.02 - 单词频率
-public class WordsFrequency {
+class WordsFrequency {
 
   Map<String, Integer> count;
 

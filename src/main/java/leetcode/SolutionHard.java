@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.Stack;
 import java.util.TreeSet;
 
-public class SolutionHard {
+class SolutionHard {
 
   // 1269
   public int numWays(int steps, int arrLen) {

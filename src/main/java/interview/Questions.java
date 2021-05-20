@@ -2,7 +2,7 @@ package interview;
 
 import java.util.Arrays;
 
-public class Problems {
+class Questions {
 
   // 面试题 16.01 - 交换数字
   public int[] swapNumbers(int[] numbers) {

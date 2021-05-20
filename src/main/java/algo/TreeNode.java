@@ -13,16 +13,5 @@ class TreeNode {
     this.left = left;
     this.right = right;
   }
-
-  void traverse(TreeNode root) {
-    if (root == null) {
-      return;
-    }
-    // pre
-    traverse(root.left);
-    //
-    traverse(root.right);
-    // post
-  }
 }
 

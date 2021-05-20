@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PermuteUniqueSolution {
+class PermuteUniqueSolution {
 
   public List<List<Integer>> permuteUnique(int[] nums) {
     List<List<Integer>> res = new ArrayList<>();

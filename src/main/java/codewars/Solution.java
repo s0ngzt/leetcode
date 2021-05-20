@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class Solution {
+class Solution {
 
   // 6 kyu
   public static String high(String s) {

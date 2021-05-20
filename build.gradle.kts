@@ -20,4 +20,5 @@ tasks.getByName<Test>("test") {
 
 tasks.compileJava {
     options.encoding = "UTF-8"
+    options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
 }
