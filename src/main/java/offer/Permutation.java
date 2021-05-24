@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-// 38 字符串的排列
+// 38. 字符串的排列
 class Permutation {
 
   List<String> res = new LinkedList<>();

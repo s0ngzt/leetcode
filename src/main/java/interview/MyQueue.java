@@ -2,10 +2,11 @@ package interview;
 
 import java.util.Stack;
 
+// 面试题 03.04. 化栈为队
 class MyQueue {
 
-  private Stack<Integer> inStack;
-  private Stack<Integer> outStack;
+  private final Stack<Integer> inStack;
+  private final Stack<Integer> outStack;
 
   /**
    * Initialize your data structure here.

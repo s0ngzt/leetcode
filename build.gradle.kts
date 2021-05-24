@@ -1,5 +1,6 @@
 plugins {
     java
+    // pmd
 }
 
 group = "org.example"
@@ -14,7 +15,7 @@ dependencies {
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 }
 
-tasks.getByName<Test>("test") {
+tasks.test {
     useJUnitPlatform()
 }
 

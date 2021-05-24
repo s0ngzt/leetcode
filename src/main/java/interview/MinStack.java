@@ -1,9 +1,9 @@
-package offer;
+package interview;
 
 import java.util.Deque;
 import java.util.LinkedList;
 
-// 30. 包含 min() 的栈
+// 面试题 03.02. 栈的最小值
 class MinStack {
 
   Deque<Integer> numStack;
@@ -32,7 +32,7 @@ class MinStack {
     return numStack.peek();
   }
 
-  public int min() {
+  public int getMin() {
     assert (!minStack.isEmpty());
     return minStack.peek();
   }

@@ -1,6 +1,6 @@
 package offer;
 
-// 37 序列化二叉树
+// 37. 序列化二叉树
 class Codec {
 
   public String serialize(TreeNode root) {

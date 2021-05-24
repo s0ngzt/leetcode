@@ -2,6 +2,7 @@ package interview;
 
 import java.util.LinkedList;
 
+// 面试题 03.03. 堆盘子
 class StackOfPlates {
 
   private final LinkedList<LinkedList<Integer>> stacks;
@@ -10,21 +11,6 @@ class StackOfPlates {
   public StackOfPlates(int cap) {
     this.stacks = new LinkedList<>();
     this.capacity = cap;
-  }
-
-  private boolean setIsEmpty() {
-    return stacks.isEmpty();
-  }
-
-  private boolean lastStackIsFUll() {
-    if (setIsEmpty()) {
-      return true;
-    }
-    return stacks.getLast().size() >= capacity;
-  }
-
-  private boolean lastStackIsEmpty() {
-    return stacks.getLast().isEmpty();
   }
 
   public void push(int val) {
@@ -59,6 +45,21 @@ class StackOfPlates {
       stacks.remove(index);
     }
     return val;
+  }
+
+  private boolean setIsEmpty() {
+    return stacks.isEmpty();
+  }
+
+  private boolean lastStackIsFUll() {
+    if (setIsEmpty()) {
+      return true;
+    }
+    return stacks.getLast().size() >= capacity;
+  }
+
+  private boolean lastStackIsEmpty() {
+    return stacks.getLast().isEmpty();
   }
 }
 

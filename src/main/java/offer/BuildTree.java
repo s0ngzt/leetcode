@@ -3,7 +3,7 @@ package offer;
 import java.util.HashMap;
 import java.util.Map;
 
-// 07 重建二叉树
+// 07. 重建二叉树
 public class BuildTree {
 
   private Map<Integer, Integer> indexMap;

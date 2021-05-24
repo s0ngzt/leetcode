@@ -2,7 +2,7 @@ package algo;
 
 import org.junit.jupiter.api.Test;
 
-public class AlgorithmTest {
+class AlgorithmTest {
 
 
   @Test

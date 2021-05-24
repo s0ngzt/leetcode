@@ -1,6 +1,6 @@
 package offer;
 
-// 02 实现单例模式
+// 02. 实现单例模式
 public class Singleton {
 
   private volatile static Singleton uniqueInstance;
