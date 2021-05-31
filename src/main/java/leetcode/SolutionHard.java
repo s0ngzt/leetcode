@@ -2,11 +2,47 @@ package leetcode;
 
 import java.util.Arrays;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Stack;
 import java.util.TreeSet;
 
 class SolutionHard {
+
+  // 1787. 使所有区间的异或结果为零
+  public int minChanges(int[] nums, int k) {
+    int n = nums.length;
+    int max = 1024;
+    int[][] f = new int[k][max];
+    int[] g = new int[k];
+    for (int i = 0; i < k; i++) {
+      Arrays.fill(f[i], 0x3f3f3f3f);
+      g[i] = 0x3f3f3f3f;
+    }
+    for (int i = 0, cnt = 0; i < k; i++, cnt = 0) {
+      Map<Integer, Integer> map = new HashMap<>();
+      for (int j = i; j < n; j += k) {
+        map.put(nums[j], map.getOrDefault(nums[j], 0) + 1);
+        cnt++;
+      }
+      if (i == 0) {
+        for (int xor = 0; xor < max; xor++) {
+          f[0][xor] = Math.min(f[0][xor], cnt - map.getOrDefault(xor, 0));
+          g[0] = Math.min(g[0], f[0][xor]);
+        }
+      } else {
+        for (int xor = 0; xor < max; xor++) {
+          f[i][xor] = g[i - 1] + cnt;
+          for (int cur : map.keySet()) {
+            f[i][xor] = Math.min(f[i][xor], f[i - 1][xor ^ cur] + cnt - map.get(cur));
+          }
+          g[i] = Math.min(g[i], f[i][xor]);
+        }
+      }
+    }
+    return f[k - 1][0];
+  }
 
   // 810 黑板异或游戏
   // 数学
@@ -260,7 +296,6 @@ class SolutionHard {
   }
 
   // 84 柱状图中的最大矩形
-  // TODO https://github.com/greyireland/algorithm-pattern/blob/master/data_structure/stack_queue.md
   public int largestRectangleArea(int[] heights) {
     if (heights.length == 0) {
       return 0;

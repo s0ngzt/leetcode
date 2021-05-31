@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -333,12 +334,6 @@ class Solution {
     return null;
   }
 
-  // 面试题 04.01. 节点间通路
-  public boolean findWhetherExistsPath(int n, int[][] graph, int start, int target) {
-    // TODO Graph
-    return false;
-  }
-
   // 面试题 04.02. 最小高度树
   public TreeNode sortedArrayToBST(int[] nums) {
     int n = nums.length;
@@ -467,7 +462,103 @@ class Solution {
     return right;
   }
 
-  // TODO 面试题 04.09. 二叉搜索树序列
+  // 面试题 05.01. 插入
+  public int insertBits(int N, int M, int i, int j) {
+    int mask = ((1 << (j - i + 1)) - 1) << i;
+    mask = ~mask;
+    N &= mask;
+    M = M << i;
+    return M | N;
+  }
+
+  // 面试题 05.02. 二进制数转字符串
+  public String printBin(double num) {
+    if (num > 1 || num < 0) {
+      return "ERROR";
+    }
+    StringBuilder sb = new StringBuilder();
+    double s = 0.50;
+    sb.append("0.");//该数是0-1之间的小数，因此先添加0.
+    while (num > 0) {
+      if (sb.length() > 32) {
+        return "ERROR";
+      }
+      if (num < s) {
+        sb.append("0");
+      } else {
+        num = num - s;
+        sb.append("1");
+      }
+      s /= 2;
+    }
+    return sb.toString();
+  }
+
+  // 面试题 08.01. 三步问题
+  public int waysToStep(int n) {
+    if (n == 1) {
+      return 1;
+    }
+    if (n == 2) {
+      return 2;
+    }
+    if (n == 3) {
+      return 4;
+    }
+    int a, b = 1, c = 2, d = 4;
+    while (n > 3) {
+      a = b;
+      b = c;
+      c = d;
+      d = ((a + b) % 1000000007 + c) % 1000000007;
+      n--;
+    }
+    return d;
+  }
+
+  // 面试题 08.04. 幂集
+  public List<List<Integer>> subsets(int[] nums) {
+    List<List<Integer>> ans = new ArrayList<>();
+    ans.add(new ArrayList<>());
+    for (var num : nums) {
+      List<List<Integer>> newSubsets = new ArrayList<>();
+      for (var subset : ans) {
+        List<Integer> newSubset = new ArrayList<>(subset);
+        newSubset.add(num);
+        newSubsets.add(newSubset);
+      }
+      ans.addAll(newSubsets);
+    }
+    return ans;
+  }
+
+  // 面试题 08.10. 颜色填充
+  // BFS
+  public int[][] floodFill(int[][] image, int sr, int sc, int newColor) {
+    int[][] directions = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
+    int m = image.length, n = image[0].length;
+    boolean[][] seen = new boolean[m][n];
+    Queue<int[]> queue = new LinkedList<>();
+    queue.offer(new int[]{sr, sc});
+    seen[sr][sc] = true;
+    int oldColor = image[sr][sc];
+
+    // BFS
+    while (!queue.isEmpty()) {
+      int[] cell = queue.poll();
+      int i = cell[0], j = cell[1];
+      image[i][j] = newColor;
+      for (int d = 0; d < 4; ++d) {
+        int ni = i + directions[d][0];
+        int nj = j + directions[d][1];
+        if (ni >= 0 && ni < m && nj >= 0 && nj < n && !seen[ni][nj] && image[ni][nj] == oldColor) {
+          queue.offer(new int[]{ni, nj});
+          seen[ni][nj] = true;
+        }
+      }
+    }
+    return image;
+  }
 
   // 面试题 10.01. 合并排序的数组
   public void merge(int[] A, int m, int[] B, int n) {
@@ -486,12 +577,6 @@ class Solution {
       }
       A[tail--] = cur;
     }
-  }
-
-  // 面试题 10.03. 搜索旋转数组
-  public int search(int[] arr, int target) {
-    // TODO
-    return -1;
   }
 
   // 面试题 10.05. 稀疏数组搜索
@@ -588,5 +673,4 @@ class Solution {
     long diff = (long) a - (long) b;
     return (int) (((long) a + (long) b + (diff ^ (diff >> 63)) - (diff >> 63)) >> 1);
   }
-
 }

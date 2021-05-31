@@ -10,6 +10,44 @@ import java.util.Set;
 
 class SolutionEasy {
 
+  // 342. 4 的幂
+  public boolean isPowerOfFour(int n) {
+    return n > 0 && (n & (n - 1)) == 0 && n % 3 == 1;
+  }
+
+  // 461 汉明距离
+  public int hammingDistance(int x, int y) {
+    int c = x ^ y;
+    int count = 0;
+    while (c > 0) {
+      c = c & (c - 1);
+      count++;
+    }
+    return count;
+  }
+
+  // 367 有效的完全平方数
+  public boolean isPerfectSquare(int num) {
+    if (num < 2) {
+      return true;
+    }
+
+    long left = 2, right = num / 2, x, guessSquared;
+    while (left <= right) {
+      x = left + (right - left) / 2;
+      guessSquared = x * x;
+      if (guessSquared == num) {
+        return true;
+      }
+      if (guessSquared > num) {
+        right = x - 1;
+      } else {
+        left = x + 1;
+      }
+    }
+    return false;
+  }
+
   // 169 多数元素
   public int majorityElement(int[] nums) {
     int candidate = nums[0], count = 1;

@@ -246,9 +246,6 @@ class Solution {
     return (int) (Math.pow(3, timesOfThree) * Math.pow(2, timesOfTwo));
   }
 
-  // 14-II. 剪绳子 II
-  // TODO
-
   // 15. 二进制中 1 的个数
   public int hammingWeight(int n) {
     int count = 0;
@@ -301,15 +298,6 @@ class Solution {
     }
     head.next = deleteNode(head.next, val);
     return head;
-  }
-
-  // 19. 正则表达式匹配
-  // TODO
-
-  // 20. 表示数值的字符串
-  public boolean isNumber(String s) {
-    // TODO
-    return false;
   }
 
   // 21. 调整数组顺序使奇数位于偶数前面
@@ -609,21 +597,6 @@ class Solution {
     return leftTree && rightTree;
   }
 
-  // 34. 二叉树中和为某一值的路径
-  // done
-
-  // 35. 复杂链表的机制
-  public RandomNode copyRandomList(RandomNode head) {
-    // TODO
-    return null;
-  }
-
-  // 36. 二叉搜索树与双向链表
-  public Node treeToDoublyList(Node root) {
-    // TODO
-    return null;
-  }
-
   // 39. 数组中出现次数超过一半的数字
   public int majorityElement(int[] nums) {
     // 排序
@@ -675,12 +648,6 @@ class Solution {
       ans = Math.max(ans, nums[i]);
     }
     return ans;
-  }
-
-  // 43. 1~n 整数中 1 出现的次数 hard
-  public int countDigitOne(int n) {
-    // TODO
-    return -1;
   }
 
   // 44. 第 N 位数字
@@ -799,12 +766,6 @@ class Solution {
     return ' ';
   }
 
-  // 51. 数组中的逆序对
-  public int reversePairs(int[] nums) {
-    // TODO
-    return -1;
-  }
-
   // 52. 两个链表的第一个公共节点
   public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
     var t1 = headA;
@@ -858,12 +819,6 @@ class Solution {
       }
     }
     return l;
-  }
-
-  // 54. 二叉搜索树的第 k 大节点
-  public int kthLargest(TreeNode root, int k) {
-    // TODO
-    return -1;
   }
 
   // 55-I. 二叉树的深度
@@ -920,12 +875,6 @@ class Solution {
       }
     }
     return new int[]{a, b};
-  }
-
-  // 56-II. 数组中数字出现的次数 II
-  public int singleNumber(int[] nums) {
-    // TODO
-    return -1;
   }
 
   // 57. 和为 s 的两个数字

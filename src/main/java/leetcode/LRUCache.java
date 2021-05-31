@@ -3,7 +3,7 @@ package leetcode;
 import java.util.HashMap;
 import java.util.Map;
 
-// 146
+// 146 LRU 缓存
 // TODO
 class LRUCache {
 
