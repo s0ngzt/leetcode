@@ -21,4 +21,3 @@ class Solution {
     return sorted.collect(Collectors.toList()).get(0);
   }
 }
-

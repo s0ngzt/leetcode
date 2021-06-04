@@ -652,7 +652,6 @@ class Solution {
 
   // 44. 第 N 位数字
   public int findNthDigit(int n) {
-    // TODO
     int digit = 1;
     long start = 1;
     long count = 9;

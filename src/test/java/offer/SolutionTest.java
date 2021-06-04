@@ -13,5 +13,4 @@ class SolutionTest {
     assertEquals("world hello,", solution.reverseWords("hello, world"));
   }
 
-
 }

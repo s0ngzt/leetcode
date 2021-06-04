@@ -13,5 +13,4 @@ public class SolutionEasyTest {
     assertEquals(2, solution.hammingDistance(1, 4));
   }
 
-
 }
