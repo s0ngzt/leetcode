@@ -7,37 +7,37 @@ import java.util.Queue;
 // 59-II. 队列的最大值
 class MaxQueue {
 
-  Queue<Integer> q;
-  Deque<Integer> d;
+    Queue<Integer> q;
+    Deque<Integer> d;
 
-  public MaxQueue() {
-    q = new LinkedList<>();
-    d = new LinkedList<>();
-  }
+    public MaxQueue() {
+        q = new LinkedList<>();
+        d = new LinkedList<>();
+    }
 
-  public int max_value() {
-    if (d.isEmpty()) {
-      return -1;
+    public int max_value() {
+        if (d.isEmpty()) {
+            return -1;
+        }
+        return d.peekFirst();
     }
-    return d.peekFirst();
-  }
 
-  public void push_back(int value) {
-    while (!d.isEmpty() && d.peekLast() < value) {
-      d.pollLast();
+    public void push_back(int value) {
+        while (!d.isEmpty() && d.peekLast() < value) {
+            d.pollLast();
+        }
+        d.offerLast(value);
+        q.offer(value);
     }
-    d.offerLast(value);
-    q.offer(value);
-  }
 
-  public int pop_front() {
-    if (q.isEmpty()) {
-      return -1;
+    public int pop_front() {
+        if (q.isEmpty()) {
+            return -1;
+        }
+        int ans = q.poll();
+        if (ans == d.peekFirst()) {
+            d.pollFirst();
+        }
+        return ans;
     }
-    int ans = q.poll();
-    if (ans == d.peekFirst()) {
-      d.pollFirst();
-    }
-    return ans;
-  }
 }

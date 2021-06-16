@@ -8,32 +8,32 @@ import java.util.List;
  */
 class BalanceBST {
 
-  List<Integer> inorderArray = new ArrayList<>();
+    List<Integer> inorderArray = new ArrayList<>();
 
-  public TreeNode balanceBST(TreeNode root) {
-    getInorder(root);
-    return build(0, inorderArray.size() - 1);
-  }
+    public TreeNode balanceBST(TreeNode root) {
+        getInorder(root);
+        return build(0, inorderArray.size() - 1);
+    }
 
-  public void getInorder(TreeNode o) {
-    if (o.left != null) {
-      getInorder(o.left);
+    public void getInorder(TreeNode o) {
+        if (o.left != null) {
+            getInorder(o.left);
+        }
+        inorderArray.add(o.val);
+        if (o.right != null) {
+            getInorder(o.right);
+        }
     }
-    inorderArray.add(o.val);
-    if (o.right != null) {
-      getInorder(o.right);
-    }
-  }
 
-  public TreeNode build(int l, int r) {
-    int mid = l + (r - l) / 2;
-    TreeNode o = new TreeNode(inorderArray.get(mid));
-    if (l <= mid - 1) {
-      o.left = build(l, mid - 1);
+    public TreeNode build(int l, int r) {
+        int mid = l + (r - l) / 2;
+        TreeNode o = new TreeNode(inorderArray.get(mid));
+        if (l <= mid - 1) {
+            o.left = build(l, mid - 1);
+        }
+        if (mid + 1 <= r) {
+            o.right = build(mid + 1, r);
+        }
+        return o;
     }
-    if (mid + 1 <= r) {
-      o.right = build(mid + 1, r);
-    }
-    return o;
-  }
 }

@@ -2,12 +2,12 @@ package offer;
 
 class TreeLinkNode {
 
-  int val;
-  TreeLinkNode left = null;
-  TreeLinkNode right = null;
-  TreeLinkNode parent = null;
+    int val;
+    TreeLinkNode left = null;
+    TreeLinkNode right = null;
+    TreeLinkNode parent = null;
 
-  TreeLinkNode(int val) {
-    this.val = val;
-  }
+    TreeLinkNode(int val) {
+        this.val = val;
+    }
 }

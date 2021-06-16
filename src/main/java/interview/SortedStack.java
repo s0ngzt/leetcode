@@ -6,42 +6,42 @@ import java.util.LinkedList;
 // 面试题 03.05. 栈排序
 class SortedStack {
 
-  private final Deque<Integer> sortedStack;
-  private final Deque<Integer> helperStack;
+    private final Deque<Integer> sortedStack;
+    private final Deque<Integer> helperStack;
 
-  public SortedStack() {
-    sortedStack = new LinkedList<>();
-    helperStack = new LinkedList<>();
-  }
-
-  public void push(int val) {
-    if (sortedStack.isEmpty()) {
-      sortedStack.push(val);
-    } else {
-      while (!sortedStack.isEmpty() && sortedStack.peek() < val) {
-        helperStack.push(sortedStack.pop());
-      }
-      sortedStack.push(val);
-      while (!helperStack.isEmpty()) {
-        sortedStack.push(helperStack.pop());
-      }
+    public SortedStack() {
+        sortedStack = new LinkedList<>();
+        helperStack = new LinkedList<>();
     }
-  }
 
-  public void pop() {
-    if (!sortedStack.isEmpty()) {
-      sortedStack.pop();
+    public void push(int val) {
+        if (sortedStack.isEmpty()) {
+            sortedStack.push(val);
+        } else {
+            while (!sortedStack.isEmpty() && sortedStack.peek() < val) {
+                helperStack.push(sortedStack.pop());
+            }
+            sortedStack.push(val);
+            while (!helperStack.isEmpty()) {
+                sortedStack.push(helperStack.pop());
+            }
+        }
     }
-  }
 
-  public int peek() {
-    if (sortedStack.isEmpty()) {
-      return -1;
+    public void pop() {
+        if (!sortedStack.isEmpty()) {
+            sortedStack.pop();
+        }
     }
-    return sortedStack.peek();
-  }
 
-  public boolean isEmpty() {
-    return sortedStack.isEmpty();
-  }
+    public int peek() {
+        if (sortedStack.isEmpty()) {
+            return -1;
+        }
+        return sortedStack.peek();
+    }
+
+    public boolean isEmpty() {
+        return sortedStack.isEmpty();
+    }
 }
