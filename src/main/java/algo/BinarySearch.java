@@ -57,13 +57,13 @@ class BinarySearch {
         int l = 0, r = n, mid;
         while (l < r) {
             mid = l + (r - l) / 2;
-            if (target < nums[mid]) {
-                r = mid;
-            } else {
+            if (nums[mid] <= target) {
                 l = mid + 1;
+            } else {
+                r = mid;
             }
         }
-        if (nums[r - 1] != target) {
+        if (r > 0 && nums[r - 1] != target) {
             return -1;
         }
         return r - 1;
